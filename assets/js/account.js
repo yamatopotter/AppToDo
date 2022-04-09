@@ -30,7 +30,7 @@
 
         console.log(userData);
 
-        var configuracoes = {
+        const configuracoes = {
             method: 'POST',
             body: JSON.stringify(userData),
             headers: {
@@ -58,6 +58,58 @@
             else{
                 console.log('Usuário criado com sucesso')
             }
+            
+        });
+
+        function entrar(){}
+        
+
+        formLogin.addEventListener('submit', (evento)=>{
+            evento.preventDefault();
+
+            let email = evento.target['emailLogin'].value;
+            let senha = evento.target['senhaLogin'].value;
+
+            let userData = {
+                email: email,
+                password: senha
+            }
+    
+            //console.log(userData);
+
+            const configuracoes = {
+                method: 'POST',
+                body: JSON.stringify(userData),
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            }
+            
+            fetch(`${BASE_URL_API}/users/login`, configuracoes)
+        .then(function (respostaDoServidor) {
+            var JSON = respostaDoServidor.json();
+            return JSON;
+        })
+        .then(function (resposta) {
+            if(resposta === "El usuario no existe"){
+                console.log("O usuário não existe")
+            }
+            else if(resposta === "Constraseña incorrecta")
+            {
+                console.log("Senha incorreta")
+            }
+            else if(resposta === "Error del servidor"){
+                console.log("Erro do servidor")
+            }
+            else{
+                sessionStorage.setItem('token', resposta);
+                window.location.href("app.html")
+            }
+
+
+
+        
+        
             
         });
     })
