@@ -5,39 +5,96 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nome do Usuário - ToDo App</title>
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/bootstrap-icons.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-    <section class="novaTarefa">
-        <h1>Nova Tarefa</h1>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+              <a class="navbar-brand" href="#"><img src="./assets/img/logo.svg" alt="Logo ToDo App"></a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#top">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#about">Sobre o App</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="createAccount.html">Criar Conta</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="login.html">Login</a>
+                  </li>          
+                </ul>
+              </div>
+            </div>
+          </nav>
+    </header>
 
-        <form class="formNovaTarefa" id="formNovaTarefa">
-            <label for="inputNovaTarefa">Nova Tarefa</label>
-            <input type="text" name="inputNovaTarefa" id="inputNovaTarefa">
-            <button type="submit">Criar Tarefa</button>
-        </form>
-    </section>
+    <main class="app">
+        <div class="container">
+            <section class="novaTarefa">
+                <h1>Nova Tarefa</h1>
+        
+                <div class="row">
+                    <div class="card">
 
-    <section class="tarefasPendentes">
-        <h1>Tarefas Pendentes</h1>
+                        <form class="form-nova-tarefa" id="formNovaTarefa">
+                            <div class="form-floating">
+                                <input type="text" name="inputNovaTarefa" id="inputNovaTarefa" class="form-control" placeholder="">
+                                <label for="inputNovaTarefa">Hoje eu vou fazer ...</label>
 
-        <ul>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
-            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
-        </ul>
-    </section>
+                            </div>
+                            <button type="submit">Criar Tarefa</button>
+                        </form>
 
-    <section class="tarefasFinalizadas">
-        <h1>Tarefas Finalizadas</h1>
+                    </div>
+                </div>
+            </section>
+        
+            <div class="row">
+                <div class="col-12 col-lg-6">
 
-        <ul>
-            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
-            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
-            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
-            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
-        </ul>
-    </section>
+                    <section class="tarefasPendentes">
+                        <h1>Tarefas Pendentes</h1>
+                
+                        <ul>
+                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
+                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
+                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
+                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
+                            <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!</li>
+                        </ul>
+                    </section>
+
+                </div>
+
+                <div class="col-12 col-lg-6">
+
+                    <section class="tarefasFinalizadas">
+                        <h1>Tarefas Finalizadas</h1>
+                
+                        <ul>
+                            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
+                            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
+                            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
+                            <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur?</li>
+                        </ul>
+                    </section>
+
+                </div>
+            </div>
+        
+        </div>
+    </main>
+
+    <script src="./assets/js/task.js"></script>
+    
 </body>
 </html>

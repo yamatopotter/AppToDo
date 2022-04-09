@@ -178,6 +178,18 @@ section {
   width: 100%;
 }
 
+.app .card {
+  padding: 20px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+          box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.form-nova-tarefa {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 footer {
   margin-top: 20px;
   text-align: center;

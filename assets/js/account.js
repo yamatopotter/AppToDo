@@ -74,8 +74,6 @@
                 password: senha
             }
     
-            //console.log(userData);
-    
             const configuracoes = {
                 method: 'POST',
                 body: JSON.stringify(userData),
@@ -86,19 +84,18 @@
     
             fetch(`${BASE_URL_API}/users/login`, configuracoes)
                 .then(function (respostaDoServidor) {
-                    var JSON = respostaDoServidor.json();
-                    return JSON;
+                    return respostaDoServidor.json();
                 })
                 .then(function (resposta) {
-                    if (resposta === "El usuario no existe") {
+                    if (resposta == "El usuario no existe") {
                         alert("O usuário não existe")
-                    } else if (resposta === "Constraseña incorrecta") {
+                    } else if (resposta == "Contraseña incorrecta") {
                         alert("Senha incorreta")
-                    } else if (resposta === "Error del servidor") {
+                    } else if (resposta == "Error del servidor") {
                         alert("Erro do servidor")
                     } else {
-                        sessionStorage.setItem('token', resposta);
-                        window.location.href("app.html")
+                        sessionStorage.setItem('token', resposta.jwt);
+                        window.location.href="app.html";
                     }
     
                 });

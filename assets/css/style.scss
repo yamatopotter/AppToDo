@@ -137,6 +137,22 @@ section{
     }
 }
 
+// App.html style
+
+.app{
+    .card{
+        padding: 20px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+}
+
+.form-nova-tarefa{
+    display:flex;
+    input{
+        // width:100%;
+    }
+}
+
 footer{
     margin-top: 20px;
     text-align: center;
