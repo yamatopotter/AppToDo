@@ -20,31 +20,33 @@
               <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">Home</a>
+                    <a class="nav-link active" aria-current="page" href="#top">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link active" href="createAccount.html">Criar Conta</a>
+                    <a class="nav-link" aria-current="page" href="#about">Sobre o App</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Login</a>
+                    <a class="nav-link" href="createAccount.html">Criar Conta</a>
                   </li>
-                  
+                  <li class="nav-item">
+                    <a class="nav-link" href="login.html">Login</a>
+                  </li>          
                 </ul>
               </div>
             </div>
           </nav>
     </header>
+    <span id="top"></span>
     <main>
         <section class="intro">
-
             <div class="container">
                 <div class="row">
                     <div class="col-12 col-lg-6 texto-intro">
     
                         <img src="./assets/img/logo.svg" alt="Logo ToDo App" class="logo">
                         <h1>Seja bem vindo ao ToDo App</h1>
-                        <p>É um muito fácil criar uma conta em nosso aplicativo</p>
-                        <ol>
+                        <p><b>É um muito fácil criar uma conta em nosso aplicativo</b></p>
+                        <ol class="step-create-account">
                             <li>Insira seu nome e sobrenome</li>
                             <li>Insira seu e-mail</li>
                             <li>Escolha uma senha segura</li>
@@ -52,9 +54,9 @@
                         </ol>
                     </div>
         
-                    <div class="col-12 col-lg-6 form-cadastro">
+                    <div class="col-12 col-lg-6 form-intro" id="createAccount">
                         <h2>Crie sua conta</h2>
-                        <form name="formCreateAccount" id="formCreateAccount" class="formCreateAccount">
+                        <form name="formCreateAccount" id="formCreateAccount" class="form-data">
                             <div class="form-floating">
                                 <input type="text" name="nome" id="nome" class="form-control" placeholder="Nome">
                                 <label for="nome">Nome</label>
@@ -88,8 +90,31 @@
 
         </section>
     
+        <section class="about" id="about">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-12 col-lg-6 img-about">
+                        <img src="./assets/img/idea.png" alt="a bird flying inside a lamp baloon through night">
+                    </div>
+
+                    <div class="col-12 col-lg-6 d-flex flex-column justify-content-center">
+                        <h1 class="mb-4">Para que serve?</h1>
+            
+                        <p>Quantas vezes ao longo da semana você estava ciente de um compromisso, um trabalho, reunião e até mesmo aquele date e esqueceu porque estava focado em outra coisa ou porque é cabeça de vento? O ToDo App foi desenvolvido especialmente para que essas coisas não caiam no esquecimento, com uma interface simples e intuitiva, conseguimos te ajudar a organizar suas tarefas do dia a dia.</p>
+
+                        <p>Ainda não tem uma conta? Está esperando o que então para deixar de esquecer suas tarefas?</p>
+
+                        <a href="#createAccount" class="btn-link">Faça já sua conta</a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
         
-        
+        <footer>
+            Desenvolvido em conjunto pelo Grupo 1 - Matheus B., Rafael B., Edinaldo F. Bruno L.
+        </footer>
     </main>
 
     <script src="./assets/js/account.js"></script>

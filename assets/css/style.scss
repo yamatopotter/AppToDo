@@ -5,6 +5,12 @@ background-attachment: fixed;
 background-size: cover;
 }
 
+header{
+    position: fixed;
+    width: 100%;
+    z-index: 999
+}
+
 nav{
     .navbar-brand{
         img{
@@ -13,18 +19,56 @@ nav{
     }
 }
 
-.intro{
+section{
     padding: 80px 0;
+}
+
+.intro{
+    padding-top: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     .logo{
         max-height: 400px;
         margin: 0 auto;
     }
 
-    .texto-intro, .form-cadastro{
+    .texto-intro, .form-intro{
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: 20px;
+    }
+}
+
+.step-create-account{
+    counter-reset: li;
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+    
+    li{
+        background-color: #fff;
+        border-radius: 30px 5px 5px 30px;
+        padding: 5px 15px 5px 5px;
+    }
+
+    li::before{
+        content: counter(li);
+        counter-increment: li;
+        background: #480ca8;
+        color: #efefef;
+        width: 2rem;
+        height: 2rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border: 3px solid #fff;
+        font-weight: bold;
+        border-radius: 50%;
+        margin-right: 10px;
     }
 }
 
@@ -68,7 +112,7 @@ nav{
     }
 }
 
-.formCreateAccount{
+.form-data{
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -83,4 +127,20 @@ nav{
         padding: 5px;
         border-radius: 5px;
     }
+}
+
+.about{
+    .img-about{
+        img{
+            width: 100%;
+        }
+    }
+}
+
+footer{
+    margin-top: 20px;
+    text-align: center;
+    background: #480ca8;
+    color: #efefef;
+    padding: 20px;
 }

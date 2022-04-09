@@ -1,18 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/bootstrap-icons.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
     <title>Login - ToDo App</title>
 </head>
+
 <body>
-    <h1>Realize seu login</h1>
-    <form name="formLogin" id="formLogin">
-        <label for="emailLogin">E-mail</label>
-        <input type="text" name="emailLogin" id="emailLogin">
-        <label for="senhaLogin">Senha</label>
-        <input type="text" name="senhaLogin" id="senhaLogin">
-    </form>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#"><img src="./assets/img/logo.svg" alt="Logo ToDo App"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="createAccount.html">Criar Conta</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.html">Login</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        <section class="intro">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-lg-6 texto-intro">
+                        <img src="./assets/img/logo.svg" alt="Logo ToDo App" class="logo">
+                        <h1>Seja bem vindo de volta!</h1>
+                    </div>
+                    <div class="col-12 col-lg-6 form-intro">
+                        <h1>Realize seu login</h1>
+                        <form name="formLogin" id="formLogin" class="form-data">
+                            <div class="form-floating">
+                                <input type="text" name="emailLogin" id="emailLogin" placeholder="E-mail" class="form-control">
+                                <label for="emailLogin">E-mail</label>
+                            </div>
+    
+                            <div class="form-floating">
+                                <input type="text" name="senhaLogin" id="senhaLogin" placeholder="Senha" class="form-control">
+                                <label for="senhaLogin">Senha</label>
+                            </div>
+                        </form>
+                        <a href="login.html" class="btn-link">Não possui conta? Crie Já</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+    </main>
 </body>
+
 </html>
