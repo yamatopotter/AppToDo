@@ -5,6 +5,42 @@ body {
   background-size: cover;
 }
 
+@-webkit-keyframes pendingTask {
+  0% {
+    background-color: #f9690e;
+  }
+  100% {
+    background-color: #f39c12;
+  }
+}
+
+@keyframes pendingTask {
+  0% {
+    background-color: #f9690e;
+  }
+  100% {
+    background-color: #f39c12;
+  }
+}
+
+@-webkit-keyframes finishedTask {
+  0% {
+    background-color: #1e824c;
+  }
+  100% {
+    background-color: #2ecc71;
+  }
+}
+
+@keyframes finishedTask {
+  0% {
+    background-color: #1e824c;
+  }
+  100% {
+    background-color: #2ecc71;
+  }
+}
+
 header {
   position: fixed;
   width: 100%;
@@ -49,6 +85,10 @@ section {
       -ms-flex-align: center;
           align-items: center;
   gap: 20px;
+}
+
+.login .intro {
+  height: 100vh;
 }
 
 .step-create-account {
@@ -184,10 +224,111 @@ section {
           box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
+.app section {
+  padding: 0;
+}
+
+.app .novaTarefa {
+  padding-top: 140px;
+}
+
+.app .tarefas {
+  padding: 80px 0;
+}
+
 .form-nova-tarefa {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.form-nova-tarefa .form-floating {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  padding-right: 20px;
+}
+
+.lista-tarefas {
+  list-style: none;
+  padding: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 10px;
+}
+
+.lista-tarefas li {
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+}
+
+.lista-tarefas li::before {
+  content: '';
+  background: #480ca8;
+  color: #efefef;
+  display: block;
+  width: 10px;
+  height: 10px;
+  font-weight: bold;
+  border-radius: 50%;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  margin-left: 5px;
+}
+
+.lista-tarefas li i {
+  font-size: 1.25rem;
+}
+
+.tarefasPendentes li {
+  background-color: #fdf5d3;
+}
+
+.tarefasPendentes li::before {
+  -webkit-animation-name: pendingTask;
+          animation-name: pendingTask;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+          animation-direction: alternate;
+}
+
+.tarefasFinalizadas li {
+  background-color: #eeffec;
+  color: #949494;
+}
+
+.tarefasFinalizadas li::before {
+  -webkit-animation-name: finishedTask;
+          animation-name: finishedTask;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-direction: alternate;
+          animation-direction: alternate;
+}
+
+.tarefasFinalizadas li i {
+  color: #0a0a0a;
 }
 
 footer {

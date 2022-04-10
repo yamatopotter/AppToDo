@@ -5,6 +5,24 @@ background-attachment: fixed;
 background-size: cover;
 }
 
+@keyframes pendingTask {
+    0%{
+        background-color: #f9690e;
+    }
+    100%{
+        background-color: #f39c12;
+    }
+}
+
+@keyframes finishedTask {
+    0%{
+        background-color: #1e824c;
+    }
+    100%{
+        background-color: #2ecc71;
+    }
+}
+
 header{
     position: fixed;
     width: 100%;
@@ -38,6 +56,12 @@ section{
         flex-direction: column;
         align-items: center;
         gap: 20px;
+    }
+}
+
+.login{
+    .intro{
+        height: 100vh;
     }
 }
 
@@ -144,13 +168,91 @@ section{
         padding: 20px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     }
+    section{
+        padding: 0;
+    }
+    .novaTarefa{
+        padding-top:140px;
+    }
+    .tarefas{
+        padding: 80px 0;
+    }
 }
 
 .form-nova-tarefa{
     display:flex;
-    input{
-        // width:100%;
+    .form-floating{
+        flex-grow: 1;
+        padding-right: 20px;
     }
+}
+
+.lista-tarefas{
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+
+    li{
+        background-color: #fff;
+        border-radius: 5px;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        &::before{
+            content: '';
+            background: #480ca8;
+            color: #efefef;
+            display: block;
+            width: 10px;
+            height: 10px;
+            font-weight: bold;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-left: 5px;
+        }
+
+        i{
+            font-size: 1.25rem;
+        }
+    }
+
+   
+}
+
+.tarefasPendentes{
+    li{
+        background-color: #fdf5d3;
+
+        &::before{
+            animation-name: pendingTask;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+
+    }
+}
+
+.tarefasFinalizadas{
+    li{
+        background-color: #eeffec;
+        color: #949494;
+        &::before{
+            animation-name: finishedTask;
+            animation-duration: 1s;
+            animation-iteration-count: infinite;
+            animation-direction: alternate;
+        }
+        i{
+            color: #0a0a0a;
+        }
+    }
+    
 }
 
 footer{
