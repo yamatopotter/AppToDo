@@ -1,12 +1,12 @@
 // Arquivo para manipulação de tarefas do usuário
-var num=0;
-
 (() => {
     let BASE_URL_API = "https://ctd-todo-api.herokuapp.com/v1";
 
     let formTarefa = document.getElementById('form-tarefa');
     let listaPendente = document.getElementById('tarefas-pendentes');
     let listaFinalizada = document.getElementById('tarefas-finalizadas');
+    let modalUpdateTask = document.getElementById('modalUpdateTask')
+    let inputUpdateTarefa = document.getElementById('inputUpdateTarefa');
 
     let token = sessionStorage.getItem('token');
     const configuracaoFetch = {
@@ -25,6 +25,9 @@ var num=0;
         let updateButton = document.createElement('i');
         updateButton.name = `btnUpdate-${id}`;
         updateButton.classList.add('bi', 'bi-pencil-square');
+        updateButton.setAttribute('data-bs-toggle', 'modal');
+        updateButton.setAttribute('data-bs-target', '#modalUpdateTask');
+        updateButton.setAttribute('data-id', id);
 
         let checkButton = document.createElement('i');
         checkButton.name = `btnCheck-${id}`;
@@ -114,6 +117,10 @@ var num=0;
         return fetch(`${BASE_URL_API}/tasks`, configuracaoFetch);
     }
 
+    function clickUpdateTask(id){
+        modalUpdateTask.setAttribute('data-id', id);
+    }
+
     async function submitCreateTask(body) {
         // document.getElementById('main-app').innerHTML += '<div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span></div>';
 
@@ -136,23 +143,44 @@ var num=0;
     }
 
     function getSpecifTask(configuracaoFetch, id) {
-        fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
-            .then(function (respostaDoServidor) {
-                return respostaDoServidor.json();
-            })
-            .then(function (resposta) {
-                if (resposta == "ID Inválido") {
-                    return (resposta)
-                } else if (resposta == "Requiere Autorización") {
-                    return ("Chave de autenticação incorreta")
-                } else if (resposta == "Tarea inexistente") {
-                    return ("Tarefa Inexistente")
-                } else if (resposta == "Error del servidor") {
-                    return ("Erro do servidor")
-                } else {
-                    return (resposta);
-                }
-            });
+        configuracaoFetch.method = 'GET';
+        delete configuracaoFetch.body;
+
+        console.log(configuracaoFetch);
+
+        return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
+            // .then(function (respostaDoServidor) {
+            //     return respostaDoServidor.json();
+            // })
+            // .then(function (resposta) {
+            //     if (resposta == "ID Inválido") {
+            //         return (resposta)
+            //     } else if (resposta == "Requiere Autorización") {
+            //         return ("Chave de autenticação incorreta")
+            //     } else if (resposta == "Tarea inexistente") {
+            //         return ("Tarefa Inexistente")
+            //     } else if (resposta == "Error del servidor") {
+            //         return ("Erro do servidor")
+            //     } else {
+            //         return (resposta);
+            //     }
+            // });
+    }
+
+    async function returnSpecifTask(configuracaoFetch, id){
+        try {
+            const getResponse = await getSpecifTask(configuracaoFetch, id);
+            const data = await getResponse.json();
+
+            console.log(data);
+
+            let checkbox = document.getElementById('checkCompletedTask');
+            inputUpdateTarefa.value = data.id;
+            checkbox.value = data.completed;
+
+        } catch (err) {
+            alert(`Oops! ${err}`);
+        }
     }
 
     function updateTask(configuracaoFetch, data, id) {
@@ -197,5 +225,15 @@ var num=0;
 
         submitCreateTask(BODY);
     });
+
+    
+
+modalUpdateTask.addEventListener('shown.bs.modal', function () {
+    let id = modalUpdateTask.getAttribute('data-id');
+
+    returnSpecifTask(configuracaoFetch, id);
+    
+
+})
 
 })();
