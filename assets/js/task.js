@@ -3,6 +3,7 @@
     let BASE_URL_API = "https://ctd-todo-api.herokuapp.com/v1";
 
     let formTarefa = document.getElementById('form-tarefa');
+    let formUpdate = document.getElementById('form-update-task');
     let listaPendente = document.getElementById('tarefas-pendentes');
     let listaFinalizada = document.getElementById('tarefas-finalizadas');
     let modalUpdateTask = document.getElementById('modalUpdateTask')
@@ -117,8 +118,9 @@
         return fetch(`${BASE_URL_API}/tasks`, configuracaoFetch);
     }
 
-    function clickUpdateTask(id){
+    function clickUpdateTask(id, taskStatus){
         modalUpdateTask.setAttribute('data-id', id);
+        modalUpdateTask.setAttribute('data-status', taskStatus);
     }
 
     async function submitCreateTask(body) {
@@ -142,6 +144,7 @@
         }
     }
 
+    // realiza o get para tarefa específica
     function getSpecifTask(configuracaoFetch, id) {
         configuracaoFetch.method = 'GET';
         delete configuracaoFetch.body;
@@ -149,25 +152,10 @@
         console.log(configuracaoFetch);
 
         return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
-            // .then(function (respostaDoServidor) {
-            //     return respostaDoServidor.json();
-            // })
-            // .then(function (resposta) {
-            //     if (resposta == "ID Inválido") {
-            //         return (resposta)
-            //     } else if (resposta == "Requiere Autorización") {
-            //         return ("Chave de autenticação incorreta")
-            //     } else if (resposta == "Tarea inexistente") {
-            //         return ("Tarefa Inexistente")
-            //     } else if (resposta == "Error del servidor") {
-            //         return ("Erro do servidor")
-            //     } else {
-            //         return (resposta);
-            //     }
-            // });
     }
 
-    async function returnSpecifTask(configuracaoFetch, id){
+    // preenche o Modal
+    async function returnTaskToUpdate(configuracaoFetch, id){
         try {
             const getResponse = await getSpecifTask(configuracaoFetch, id);
             const data = await getResponse.json();
@@ -175,8 +163,8 @@
             console.log(data);
 
             let checkbox = document.getElementById('checkCompletedTask');
-            inputUpdateTarefa.value = data.id;
-            checkbox.value = data.completed;
+            inputUpdateTarefa.value = data.description;
+            checkbox.checked = data.completed;
 
         } catch (err) {
             alert(`Oops! ${err}`);
@@ -190,7 +178,7 @@
         return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
     }
 
-    async function submitUpdateTask(dataUser, id){
+    async function submitUpdateTask(dataUser, id, lastState){
         try{
             const submitResponse = await updateTask(configuracaoFetch, dataUser, id);
             const data = await submitResponse.json();
@@ -199,10 +187,15 @@
                 const completedTask = data.completed;
                 let elementTask = document.getElementById(`task-${id}`);
     
-                if(completedTask){
-                    listaFinalizada.appendChild(elementTask);
-                }else{
+                if(completedTask === lastState){
                     elementTask.innerText = data.description;
+                }
+                else{
+                    if(completedTask){
+                        listaFinalizada.appendChild(elementTask);
+                    }else{
+                        listaPendente.appendChild(elementTask);
+                    }
                 }
             }
             else{
@@ -226,14 +219,25 @@
         submitCreateTask(BODY);
     });
 
-    
+    modalUpdateTask.addEventListener('shown.bs.modal', (e) => {
+        console.log(e);
+        let id = modalUpdateTask.getAttribute('data-id');
+        returnTaskToUpdate(configuracaoFetch, id);
+    })
 
-modalUpdateTask.addEventListener('shown.bs.modal', function () {
-    let id = modalUpdateTask.getAttribute('data-id');
+    formUpdate.addEventListener('submit', (e)=>{
+        e.preventDefault();
 
-    returnSpecifTask(configuracaoFetch, id);
-    
+        const TAREFA = e.target['inputUpdateTarefa'].value;
+        const CHECKBOX = e.target['checkCompletedTask'].checked;
+        const ID = modalUpdateTask.getAttribute('data-id');
 
-})
+        const BODY = {
+            description: TAREFA,
+            completed: CHECKBOX
+        }
+
+        submitUpdateTask(BODY, ID, CHECKBOX);
+    })
 
 })();
