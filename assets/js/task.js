@@ -98,7 +98,7 @@ var num=0;
             deleteButton.classList.add('bi', 'bi-clipboard-x');
 
             deleteButton.addEventListener('click', () => {
-                clickDeleteTask(configuracaoFetch, idTarefa);
+                clickDeleteTask(idTarefa);
             });
 
             elementTask.appendChild(deleteButton);
