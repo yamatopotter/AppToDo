@@ -16,6 +16,42 @@ var num=0;
         }
     }
 
+    function createElement(id, description){
+        let elementTask = document.createElement('li');
+        elementTask.name = `task-${id}`;
+        elementTask.id = `task-${id}`;
+        elementTask.innerText = description;
+
+        let updateButton = document.createElement('i');
+        updateButton.name = `btnUpdate-${id}`;
+        updateButton.classList.add('bi', 'bi-pencil-square');
+
+        let checkButton = document.createElement('i');
+        checkButton.name = `btnCheck-${id}`;
+        checkButton.classList.add('bi', 'bi-clipboard-check');
+
+        let deleteButton = document.createElement('i');
+        deleteButton.name = `btnDelete-${id}`;
+        deleteButton.classList.add('bi', 'bi-clipboard-x');
+
+        updateButton.addEventListener('click', () => {
+            clickUpdateTask(id);
+        });
+
+        checkButton.addEventListener('click', () => {
+            clickCheckTask(id);
+        });
+
+        deleteButton.addEventListener('click', () => {
+            clickDeleteTask(id);
+        });
+
+        elementTask.appendChild(updateButton);
+        elementTask.appendChild(checkButton);
+        elementTask.appendChild(deleteButton);
+
+        return elementTask
+    }
 
     function getUserData(configuracaoFetch) {
         fetch(`${BASE_URL_API}/users/getMe/`, configuracaoFetch)
@@ -30,7 +66,6 @@ var num=0;
                 } else {
                     return (resposta);
                 }
-
             });
     }
 
@@ -60,8 +95,11 @@ var num=0;
         try {
             const submitResponse = await deleteTask(configuracaoFetch, id);
             const data = await submitResponse.json();
-
+            let elementExclusion = document.getElementById(`task-${id}`);
+            
             alert(data);
+            elementExclusion.remove();
+
         } catch (err) {
             alert(`Oops! ${err}`);
         }
@@ -88,22 +126,8 @@ var num=0;
             let idTarefa = data.id;
             let description = data.description;
 
-            let elementTask = document.createElement('li');
-            elementTask.name = `task-${idTarefa}`;
-            elementTask.id = idTarefa;
-            elementTask.innerText = description;
-
-            let deleteButton = document.createElement('i');
-            deleteButton.name = `btnDelete-${idTarefa}`;
-            deleteButton.classList.add('bi', 'bi-clipboard-x');
-
-            deleteButton.addEventListener('click', () => {
-                clickDeleteTask(idTarefa);
-            });
-
-            elementTask.appendChild(deleteButton);
-            console.log(elementTask);
-
+            const elementTask = createElement(idTarefa, description)
+            
             listaPendente.appendChild(elementTask);
 
         } catch (err) {
@@ -134,28 +158,33 @@ var num=0;
     function updateTask(configuracaoFetch, data, id) {
         configuracaoFetch.body = JSON.stringify(data)
         configuracaoFetch.method = 'PUT';
-        configuracaoFetch.header['Content-type'] = 'application/json; charset=UTF-8';
 
-        fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
-            .then(function (respostaDoServidor) {
-                return respostaDoServidor.json();
-            })
-            .then(function (resposta) {
-                if (resposta == "ID Inválido") {
-                    return (resposta)
-                } else if (resposta == "Requiere Autorización") {
-                    return ("Chave de autenticação incorreta")
-                } else if (resposta == "Tarea inexistente") {
-                    return ("Tarefa Inexistente")
-                } else if (resposta == "Error del servidor") {
-                    return ("Erro do servidor")
-                } else {
-                    return (resposta);
-                }
-            });
+        return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
     }
 
+    async function submitUpdateTask(dataUser, id){
+        try{
+            const submitResponse = await updateTask(configuracaoFetch, dataUser, id);
+            const data = await submitResponse.json();
+
+            if(typeof(data)=='object'){
+                const completedTask = data.completed;
+                let elementTask = document.getElementById(`task-${id}`);
     
+                if(completedTask){
+                    listaFinalizada.appendChild(elementTask);
+                }else{
+                    elementTask.innerText = data.description;
+                }
+            }
+            else{
+                alert(data);
+            }
+        }
+        catch(err){
+            alert(`Oops! ${err}`);
+        }
+    }
 
     formTarefa.addEventListener('submit', (evento) => {
         evento.preventDefault();
