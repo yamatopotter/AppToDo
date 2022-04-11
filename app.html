@@ -37,7 +37,7 @@
           </nav>
     </header>
 
-    <main class="app">
+    <main class="app" id="main-app">
         <div class="container">
             <section class="novaTarefa">
                 <h1>Nova Tarefa</h1>
@@ -45,11 +45,10 @@
                 <div class="row">
                     <div class="card">
 
-                        <form class="form-nova-tarefa" id="formNovaTarefa">
+                        <form class="form-nova-tarefa" id="form-tarefa">
                             <div class="form-floating">
                                 <input type="text" name="inputNovaTarefa" id="inputNovaTarefa" class="form-control" placeholder="">
                                 <label for="inputNovaTarefa">Hoje eu vou fazer ...</label>
-
                             </div>
                             <button type="submit" class="button">Criar Tarefa</button>
                         </form>
@@ -64,7 +63,7 @@
                     <section class="tarefasPendentes">
                         <h1>Tarefas Pendentes</h1>
                 
-                        <ul class="lista-tarefas">
+                        <ul class="lista-tarefas" id="tarefas-pendentes">
                             <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus!<i class="bi bi-pencil-square"></i><i class="bi bi-clipboard-check"></i><i class="bi bi-clipboard-x"></i></li>
                             <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus! <i class="bi bi-pencil-square"></i><i class="bi bi-clipboard-check"></i><i class="bi bi-clipboard-x"></i></li>
                             <li>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium, ducimus! Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam repellat ab omnis distinctio voluptatem vero, ad voluptatum explicabo vel quos.<i class="bi bi-pencil-square"></i><i class="bi bi-clipboard-check"></i><i class="bi bi-clipboard-x"></i></li>
@@ -81,7 +80,7 @@
                     <section class="tarefasFinalizadas">
                         <h1>Tarefas Finalizadas</h1>
                 
-                        <ul class="lista-tarefas">
+                        <ul class="lista-tarefas" id="tarefas-finalizadas">
                             <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur? <i class="bi bi-arrow-90deg-left"></i><i class="bi bi-clipboard-x"></i></li>
                             <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur? <i class="bi bi-arrow-90deg-left"></i><i class="bi bi-clipboard-x"></i></li>
                             <li>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reprehenderit, consequuntur? <i class="bi bi-arrow-90deg-left"></i><i class="bi bi-clipboard-x"></i></li>
