@@ -6,7 +6,8 @@
     let formUpdate = document.getElementById('form-update-task');
     let listaPendente = document.getElementById('tarefas-pendentes');
     let listaFinalizada = document.getElementById('tarefas-finalizadas');
-    let modalUpdateTask = document.getElementById('modalUpdateTask')
+    let modalUpdateTask = document.getElementById('modalUpdateTask');
+    let modalUpdateControl = new bootstrap.Modal(modalUpdateTask);
     let inputUpdateTarefa = document.getElementById('inputUpdateTarefa');
 
     let token = sessionStorage.getItem('token');
@@ -17,11 +18,16 @@
         }
     }
 
-    function createElement(id, description){
+    // Cria os elementos
+    function createElement(id, description, status){      
         let elementTask = document.createElement('li');
         elementTask.name = `task-${id}`;
         elementTask.id = `task-${id}`;
-        elementTask.innerText = description;
+    
+        let spanText = document.createElement('span');
+        spanText.name = `task-description-${id}`;
+        spanText.id = `task-description-${id}`;
+        spanText.innerText = description;
 
         let updateButton = document.createElement('i');
         updateButton.name = `btnUpdate-${id}`;
@@ -30,9 +36,16 @@
         updateButton.setAttribute('data-bs-target', '#modalUpdateTask');
         updateButton.setAttribute('data-id', id);
 
+
         let checkButton = document.createElement('i');
         checkButton.name = `btnCheck-${id}`;
-        checkButton.classList.add('bi', 'bi-clipboard-check');
+        if(status){
+            checkButton.classList.add('bi', 'bi-arrow-90deg-left');
+        }
+        else{
+            checkButton.classList.add('bi', 'bi-clipboard-check');
+        }
+        
 
         let deleteButton = document.createElement('i');
         deleteButton.name = `btnDelete-${id}`;
@@ -50,11 +63,31 @@
             clickDeleteTask(id);
         });
 
+        elementTask.appendChild(spanText)
         elementTask.appendChild(updateButton);
         elementTask.appendChild(checkButton);
         elementTask.appendChild(deleteButton);
 
         return elementTask
+    }
+
+    async function firstLoad(){
+
+        let response = await getUserTasks(configuracaoFetch);
+        let data = await response.json();
+
+
+        // montar o foreach em javascript de DATA e chamar a função de criar elemento
+    }
+
+// ---------------------USER---------------------------
+
+    // realiza o get para tarefa específica
+    function getSpecifTask(configuracaoFetch, id) {
+        configuracaoFetch.method = 'GET';
+        delete configuracaoFetch.body;
+
+        return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
     }
 
     function getUserData(configuracaoFetch) {
@@ -74,20 +107,14 @@
     }
 
     function getUserTasks(configuracaoFetch) {
-        fetch(`${BASE_URL_API}/tasks`, configuracaoFetch)
-            .then(function (respostaDoServidor) {
-                return respostaDoServidor.json();
-            })
-            .then(function (resposta) {
-                if (resposta == "Requiere Autorización") {
-                    return ("Chave de autenticação incorreta")
-                } else if (resposta == "Error del servidor") {
-                    return ("Erro do servidor")
-                } else {
-                    return (resposta);
-                }
-            });
+        if(configuracaoFetch.body){
+            delete configuracaoFetch.body
+        }
+        configuracaoFetch.method = 'GET'
+        return fetch(`${BASE_URL_API}/tasks`, configuracaoFetch)
     }
+
+    //------------------DELETE---------------------------
 
     function deleteTask(configuracaoFetch, id) {
         configuracaoFetch.method = 'DELETE';
@@ -103,34 +130,23 @@
             
             alert(data);
             elementExclusion.remove();
-
         } catch (err) {
             alert(`Oops! ${err}`);
         }
     }
 
+    // ---------------------CREATE------------------------
+
     function createTask(configuracaoFetch, data) {
         configuracaoFetch.body = JSON.stringify(data)
         configuracaoFetch.method = 'POST';
-
-        console.log(configuracaoFetch);
-
         return fetch(`${BASE_URL_API}/tasks`, configuracaoFetch);
     }
 
-    function clickUpdateTask(id, taskStatus){
-        modalUpdateTask.setAttribute('data-id', id);
-        modalUpdateTask.setAttribute('data-status', taskStatus);
-    }
-
     async function submitCreateTask(body) {
-        // document.getElementById('main-app').innerHTML += '<div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span></div>';
-
         try {
             const submitResponse = await createTask(configuracaoFetch, body);
             const data = await submitResponse.json();
-
-            console.log(data);
 
             let idTarefa = data.id;
             let description = data.description;
@@ -138,20 +154,15 @@
             const elementTask = createElement(idTarefa, description)
             
             listaPendente.appendChild(elementTask);
-
         } catch (err) {
             alert(`Oops! ${err}`);
         }
     }
 
-    // realiza o get para tarefa específica
-    function getSpecifTask(configuracaoFetch, id) {
-        configuracaoFetch.method = 'GET';
-        delete configuracaoFetch.body;
+    // -----------------UPDATE----------------------
 
-        console.log(configuracaoFetch);
-
-        return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
+    function clickUpdateTask(id){
+        modalUpdateTask.setAttribute('data-id', id);
     }
 
     // preenche o Modal
@@ -160,12 +171,11 @@
             const getResponse = await getSpecifTask(configuracaoFetch, id);
             const data = await getResponse.json();
 
-            console.log(data);
-
-            let checkbox = document.getElementById('checkCompletedTask');
+            let checkboxTask = document.getElementById('checkCompletedTask');
+            let checkboxLastStatus = document.getElementById('checkboxFirstState');
             inputUpdateTarefa.value = data.description;
-            checkbox.checked = data.completed;
-
+            checkboxTask.checked = data.completed;
+            checkboxLastStatus.checked = data.completed;
         } catch (err) {
             alert(`Oops! ${err}`);
         }
@@ -186,11 +196,20 @@
             if(typeof(data)=='object'){
                 const completedTask = data.completed;
                 let elementTask = document.getElementById(`task-${id}`);
+                let descriptionTask = document.getElementById(`task-description-${id}`);
+                let statusLastState = lastState.checked;
     
-                if(completedTask === lastState){
-                    elementTask.innerText = data.description;
+                console.log(completedTask == statusLastState);
+
+                if(completedTask == statusLastState){
+                    descriptionTask.innerText = data.description;
+                    
+                    console.log(`Elemento atualizado: `);
+                    console.log(elementTask);
                 }
                 else{
+                    lastState.checked = completedTask;
+
                     if(completedTask){
                         listaFinalizada.appendChild(elementTask);
                     }else{
@@ -207,6 +226,7 @@
         }
     }
 
+    // função OK
     formTarefa.addEventListener('submit', (evento) => {
         evento.preventDefault();
 
@@ -219,25 +239,35 @@
         submitCreateTask(BODY);
     });
 
+    // função OK
     modalUpdateTask.addEventListener('shown.bs.modal', (e) => {
         console.log(e);
         let id = modalUpdateTask.getAttribute('data-id');
         returnTaskToUpdate(configuracaoFetch, id);
     })
 
+    // função Ok
     formUpdate.addEventListener('submit', (e)=>{
         e.preventDefault();
 
         const TAREFA = e.target['inputUpdateTarefa'].value;
         const CHECKBOX = e.target['checkCompletedTask'].checked;
         const ID = modalUpdateTask.getAttribute('data-id');
+        const LAST_STATE = document.getElementById('checkboxFirstState');
 
         const BODY = {
             description: TAREFA,
             completed: CHECKBOX
         }
 
-        submitUpdateTask(BODY, ID, CHECKBOX);
-    })
+        submitUpdateTask(BODY, ID, LAST_STATE);
+
+        modalUpdateControl.hide();
+    });
+
+    // Cria as tarefas de acordo com o pedido
+    window.addEventListener('load', function () {
+        alert("It's loaded!")
+      })
 
 })();
