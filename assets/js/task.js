@@ -282,7 +282,7 @@
                 let elementTask = document.getElementById(`task-${id}`);
                 let descriptionTask = document.getElementById(`task-description-${id}`);
 
-                // 
+                // Se não houve mudança do status, alteramos apenas o texto, caso contrário, mudamos os ícones, texto e posição do elemento
                 if (completedTask == statusLastState) {
                     descriptionTask.innerText = data.description;
                 }
