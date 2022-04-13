@@ -218,6 +218,10 @@ section {
   width: 100%;
 }
 
+.app {
+  min-height: 91vh;
+}
+
 .app .card {
   padding: 20px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -269,9 +273,9 @@ section {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
@@ -290,6 +294,20 @@ section {
   -ms-flex-negative: 0;
       flex-shrink: 0;
   margin-left: 5px;
+}
+
+.lista-tarefas li div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 10px;
+}
+
+.lista-tarefas li span {
+  -webkit-box-flex: 1;
+      -ms-flex-positive: 1;
+          flex-grow: 1;
+  text-align: left;
 }
 
 .lista-tarefas li i {

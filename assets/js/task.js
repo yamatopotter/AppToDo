@@ -29,6 +29,8 @@
         spanText.id = `task-description-${id}`;
         spanText.innerText = description;
 
+        let divButtons = document.createElement('div');
+
         let updateButton = document.createElement('i');
         updateButton.name = `btnUpdate-${id}`;
         updateButton.classList.add('bi', 'bi-pencil-square');
@@ -39,6 +41,7 @@
 
         let checkButton = document.createElement('i');
         checkButton.name = `btnCheck-${id}`;
+        checkButton.id = `btnCheck-${id}`;
         if(status){
             checkButton.classList.add('bi', 'bi-arrow-90deg-left');
         }
@@ -64,9 +67,10 @@
         });
 
         elementTask.appendChild(spanText)
-        elementTask.appendChild(updateButton);
-        elementTask.appendChild(checkButton);
-        elementTask.appendChild(deleteButton);
+        divButtons.appendChild(updateButton);
+        divButtons.appendChild(checkButton);
+        divButtons.appendChild(deleteButton);
+        elementTask.appendChild(divButtons);
 
         return elementTask
     }
@@ -76,8 +80,20 @@
         let response = await getUserTasks(configuracaoFetch);
         let data = await response.json();
 
+        data.map( dado => {
+            let statusTarefa = dado.completed;
+            let description = dado.description;
+            let id = dado.id;
 
-        // montar o foreach em javascript de DATA e chamar a função de criar elemento
+            const liTarefa = createElement(id, description, statusTarefa);
+
+            if(statusTarefa){
+                listaFinalizada.appendChild(liTarefa);
+            }
+            else{
+                listaPendente.appendChild(liTarefa);
+            }
+        })
     }
 
 // ---------------------USER---------------------------
@@ -151,7 +167,7 @@
             let idTarefa = data.id;
             let description = data.description;
 
-            const elementTask = createElement(idTarefa, description)
+            const elementTask = createElement(idTarefa, description);
             
             listaPendente.appendChild(elementTask);
         } catch (err) {
@@ -198,22 +214,21 @@
                 let elementTask = document.getElementById(`task-${id}`);
                 let descriptionTask = document.getElementById(`task-description-${id}`);
                 let statusLastState = lastState.checked;
-    
-                console.log(completedTask == statusLastState);
 
                 if(completedTask == statusLastState){
                     descriptionTask.innerText = data.description;
-                    
-                    console.log(`Elemento atualizado: `);
-                    console.log(elementTask);
                 }
                 else{
                     lastState.checked = completedTask;
-
+                    checkButton = document.getElementById(`btnCheck-${id}`)
                     if(completedTask){
                         listaFinalizada.appendChild(elementTask);
+                        checkButton.classList.remove('bi-clipboard-check');                        
+                        checkButton.classList.add('bi-arrow-90deg-left');                        
                     }else{
                         listaPendente.appendChild(elementTask);
+                        checkButton.classList.add('bi-clipboard-check');                        
+                        checkButton.classList.remove('bi-arrow-90deg-left');
                     }
                 }
             }
@@ -267,7 +282,6 @@
 
     // Cria as tarefas de acordo com o pedido
     window.addEventListener('load', function () {
-        alert("It's loaded!")
-      })
-
+        firstLoad()
+    })
 })();
