@@ -181,11 +181,16 @@
             const atualizaTarefa = await updateTask(configuracaoFetch, dadosTarefa, id);
             const respostaAtualizaTarefa = await atualizaTarefa.status;
 
-            if (respostaAtualizaTarefa = 200) {
+            if (respostaAtualizaTarefa == 200) {
+                checkButton = document.getElementById(`btnCheck-${id}`);
                 if (tarefaCompleta) {
                     listaPendente.appendChild(liTarefa);
+                    checkButton.classList.add('bi-clipboard-check');
+                    checkButton.classList.remove('bi-arrow-90deg-left');
                 } else {
                     listaFinalizada.appendChild(liTarefa);
+                    checkButton.classList.remove('bi-clipboard-check');
+                    checkButton.classList.add('bi-arrow-90deg-left');
                 }
             } else {
                 alert(respostaAtualizaTarefa);
@@ -193,7 +198,6 @@
         } catch (err) {
             alert(`Oops! ${err}`);
         }
-
     }
 
 
