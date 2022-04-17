@@ -266,6 +266,21 @@ section{
     
 }
 
+#modalMessage{
+    .modal-body{
+        text-align: center;
+    }
+    i{
+        font-size: 5rem;
+    }
+    .bi-exclamation-circle{
+        color: #f9690e;
+    }
+    .bi-info-circle{
+        color: #26a65b;
+    }
+}
+
 footer{
     margin-top: 20px;
     text-align: center;

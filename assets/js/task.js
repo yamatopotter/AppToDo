@@ -14,9 +14,16 @@
     let modalUpdateTask = document.getElementById('modalUpdateTask');
     // Controle do modal de edição da tarefa
     let modalUpdateControl = new bootstrap.Modal(modalUpdateTask);
-
+    // Captura o modal de mensagem e seus filhos
+    let modalMesasage = document.getElementById('modalMessage');
+    // Cria o controle JS para o modal de mensagem=
+    let modalMessageControl = new bootstrap.Modal(modalMesasage);
     // Captura do token e armazena na session storage
     let token = sessionStorage.getItem('token');
+    // Adiciona a função de deslogar ao item do menu
+    let btnLogout = document.getElementById('logout')
+    
+    btnLogout.addEventListener('click', () => deslogar())
 
     // Objeto de configuração da API para uso do Fetch
     const configuracaoFetch = {
@@ -26,8 +33,14 @@
         }
     }
 
+    // Realiza o logout do usuário exibindo uma popup pedindo confirmação e caso verdadeiro, destrói a sessionStorage
+    function deslogar(){
+        sessionStorage.clear();
+        showModalMessage("Logout", "Você será deslogado do sistema", true, true);
+    }
+
     // Cria os elementos
-    function createElement(id, description, status) {
+    function createElement(id, description, status, condition) {
         // Criação da LI
         let elementTask = document.createElement('li');
         elementTask.name = `task-${id}`;
@@ -78,7 +91,7 @@
         });
 
         // Encapsulamos todos os objetos criados
-        elementTask.appendChild(spanText)
+        elementTask.appendChild(spanText);
         divButtons.appendChild(updateButton);
         divButtons.appendChild(checkButton);
         divButtons.appendChild(deleteButton);
@@ -88,36 +101,66 @@
         return elementTask
     }
 
+    function showModalMessage(title, message, status, condition=false) {
+        const modalMesasageTitle = document.getElementById('modalMessageTitle');
+        const modalMesasageIcon = document.getElementById('modalMessageIcon');
+        const modalMesasageDescription = document.getElementById('modalMessageBody');
+
+        modalMesasageTitle.innerText = title;
+        modalMesasageDescription.innerText = message;
+
+        if (status) {
+            modalMesasageIcon.classList.add('bi-info-circle');
+            modalMesasageIcon.classList.remove('bi-exclamation-circle');
+        } else {
+            modalMesasageIcon.classList.add('bi-exclamation-circle');
+            modalMesasageIcon.classList.remove('bi-info-circle');
+        }
+
+        if (condition){
+            modalMessage.setAttribute('data-condition', true);
+        }
+        modalMessageControl.show();
+    }
+
     // Função que realiza o carregamento das informações da tarefa assim que a página termina o carregamento
     async function firstLoad() {
-
         try {
             // Realizo a chamada para a função com o fetch configurado para retornar as tarefas do usuário
             let response = await getUserTasks(configuracaoFetch);
             // Realizo a conversão dos dados recebidos
+            let statusData = await response.status
             let data = await response.json();
 
-            // Através do MAP realizo a varredura do array de objetos retornado, passando elemento a elemento
-            data.map(dado => {
-                // capturo os dados do status da tarefa, descrição e id da tarefa retornado pela API
-                let statusTarefa = dado.completed;
-                let description = dado.description;
-                let id = dado.id;
+            if (statusData == 200) {
+                // Através do MAP realizo a varredura do array de objetos retornado, passando elemento a elemento
+                data.map(dado => {
+                    // capturo os dados do status da tarefa, descrição e id da tarefa retornado pela API
+                    let statusTarefa = dado.completed;
+                    let description = dado.description;
+                    let id = dado.id;
 
-                // crio uma LI referente a tarefa
-                const liTarefa = createElement(id, description, statusTarefa);
+                    // crio uma LI referente a tarefa
+                    const liTarefa = createElement(id, description, statusTarefa);
 
-                // defino em qual lista ela vai ser adicionada
-                if (statusTarefa) {
-                    listaFinalizada.appendChild(liTarefa);
-                } else {
-                    listaPendente.appendChild(liTarefa);
-                }
-            })
+                    // defino em qual lista ela vai ser adicionada
+                    if (statusTarefa) {
+                        listaFinalizada.appendChild(liTarefa);
+                    } else {
+                        listaPendente.appendChild(liTarefa);
+                    }
+                })
+            }
+            else if(statusData == 401){
+                showModalMessage('Erro', 'Você não está autenticado', false, true);
+            }
+            else{
+                showModalMessage('Erro no Serviço', 'Houve um erro no servidor, experimente atualizar a página.', false);
+            }
+
         } catch (err) {
-            alert(err);
+            showModalMessage('Erro gravíssimo', err, false);
         }
-
     }
 
     // ---------------------USER---------------------------
@@ -168,38 +211,65 @@
     //----------------- check --------------------
     async function clickCheckTask(id) {
         try {
+            // Capturamos os dados da tarefa que estamos para marcar como finalizada/pendente
             const verificaTarefa = await getSpecifTask(configuracaoFetch, id);
+            // convertemos os dados de nossa resposta da tarefa
             const respostaVerificaTarefa = await verificaTarefa.json();
-            const tarefaCompleta = respostaVerificaTarefa.completed;
-            const descricaoTarefa = respostaVerificaTarefa.description;
-            const dadosTarefa = {
-                description: descricaoTarefa,
-                completed: !tarefaCompleta,
-            }
-            const liTarefa = document.getElementById(`task-${id}`);
+            // Verificamos o status de nossa requisição
+            const statusVerificaTarefa = await verificaTarefa.status;
 
-            const atualizaTarefa = await updateTask(configuracaoFetch, dadosTarefa, id);
-            const respostaAtualizaTarefa = await atualizaTarefa.status;
-
-            if (respostaAtualizaTarefa == 200) {
-                checkButton = document.getElementById(`btnCheck-${id}`);
-                if (tarefaCompleta) {
-                    listaPendente.appendChild(liTarefa);
-                    checkButton.classList.add('bi-clipboard-check');
-                    checkButton.classList.remove('bi-arrow-90deg-left');
-                } else {
-                    listaFinalizada.appendChild(liTarefa);
-                    checkButton.classList.remove('bi-clipboard-check');
-                    checkButton.classList.add('bi-arrow-90deg-left');
+            // Caso haja sucesso na captura dos dados
+            if(statusVerificaTarefa == 200){
+                // salvamos o status da tarefa
+                const tarefaCompleta = respostaVerificaTarefa.completed;
+                // salvamos a descrição da tarefa
+                const descricaoTarefa = respostaVerificaTarefa.description;
+                // Montamos o body para realizar o update do status da tarefa
+                const dadosTarefa = {
+                    description: descricaoTarefa,
+                    completed: !tarefaCompleta,
                 }
+                
+                // capturamos a li a ser movida
+                const liTarefa = document.getElementById(`task-${id}`);
+                // realizamos a chamada a api
+                const atualizaTarefa = await updateTask(configuracaoFetch, dadosTarefa, id);
+                // aguardamos o status da nossa atualização lá na API
+                const respostaAtualizaTarefa = await atualizaTarefa.status;
+                // se a resposta do servidor for positiva quanto a atualização
+                if (respostaAtualizaTarefa == 200) {
+                    let checkButton = document.getElementById(`btnCheck-${id}`);
+                    if (tarefaCompleta) {
+                        listaPendente.appendChild(liTarefa);
+                        checkButton.classList.add('bi-clipboard-check');
+                        checkButton.classList.remove('bi-arrow-90deg-left');
+                    } else {
+                        listaFinalizada.appendChild(liTarefa);
+                        checkButton.classList.remove('bi-clipboard-check');
+                        checkButton.classList.add('bi-arrow-90deg-left');
+                    }
+                } else if(statusSubmitResponse == 400) {
+                    showModalMessage("Oops, tivemos um erro", "ID da tarefa inválido.", false);
+                } else if(statusSubmitResponse == 404){
+                    showModalMessage("Oops, tivemos um erro", "Tarefa inexistente, atualize a aplicação por favor.", false)
+                } else if(statusSubmitResponse == 401){
+                    showModalMessage("Oops, tivemos um erro", "Houve um erro na autenticação, realize o login novamente por favor.", false)
+                } else {
+                    showModalMessage("Oops, tivemos um erro", "Houve um erro no servidor, tente novamente realizar a tarefa", false)
+                }
+            } else if(statusSubmitResponse == 400) {
+                showModalMessage("Oops, tivemos um erro", "ID da tarefa inválido.", false);
+            } else if(statusSubmitResponse == 404){
+                showModalMessage("Oops, tivemos um erro", "Tarefa inexistente, atualize a aplicação por favor.", false)
+            } else if(statusSubmitResponse == 401){
+                showModalMessage("Oops, tivemos um erro", "Houve um erro na autenticação, realize o login novamente por favor.", false)
             } else {
-                alert(respostaAtualizaTarefa);
+                showModalMessage("Oops, tivemos um erro", "Houve um erro no servidor, tente novamente realizar a tarefa", false)
             }
         } catch (err) {
-            alert(`Oops! ${err}`);
+            showModalMessage("Erro na aplicação", err);
         }
     }
-
 
     //------------------DELETE---------------------------
 
@@ -212,27 +282,35 @@
         return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch);
     }
 
-
     // utilizamos a função assincrona pois estamos trabalhando com chamadas a API, o que nos retornará Promises. 
     async function clickDeleteTask(id) {
         try {
             // realizamos a chamada a API e aguardamos ela ser resolvida
             const submitResponse = await deleteTask(configuracaoFetch, id);
             // realizamos a conversão dos dados recebidos da API
-            const data = await submitResponse.statusText
+            const data = await submitResponse.status
             // capturamos a LI a ser removida
-            elementExclusion = document.getElementById(`task-${id}`);
-            // Exibimos a mensagem de retorno da API conforme a documentação, o ideal é tratar essa informação antes de ser exibida pois está em espanhol
-            alert(data);
-            // O elemento é removido da tela
-            elementExclusion.remove();
+            console.log(data)
+            if(data == 200){
+                elementExclusion = document.getElementById(`task-${id}`);
+                showModalMessage("Sucesso", "Tarefa excluída com sucesso!", true, false);
+                // O elemento é removido da tela
+                elementExclusion.remove();
+            }else if(data == 400){
+                showModalMessage("Oops, tivemos um erro", "ID da tarefa inválido.", false, false);
+            }else if(data == 401){
+                showModalMessage("Oops, tivemos um erro", "Houve um erro na autenticação, realize o login novamente por favor.", false)
+            }else if(data == 404){
+                showModalMessage("Oops, tivemos um erro", "Tarefa inexistente, atualize a aplicação por favor.", false)
+            }else{
+                showModalMessage("Oops, tivemos um erro", "Houve um erro no servidor, tente novamente realizar a tarefa", false)
+            }
+            
         } catch (err) {
             // Exibe uma mensagem de erro caso aconteceça alguma coisa na tentativa de execução
-            alert(`Oops! ${err}`);
+            showModalMessage('Erro na aplicação', err, false, false);
         }
     }
-
-
 
     // ---------------------CREATE------------------------
 
@@ -265,10 +343,9 @@
             listaPendente.appendChild(elementTask);
         } catch (err) {
             // Exibe uma mensagem de erro caso aconteceça alguma coisa na tentativa de execução           
-            alert(`Oops! ${err}`);
+            showModalMessage('Erro na aplicação', err, false);
         }
     }
-
 
     // -----------------UPDATE----------------------
 
@@ -286,22 +363,38 @@
             // Realizamos a chamada para API através da função e aguardamos a resposta
             const getResponse = await getSpecifTask(configuracaoFetch, id);
             // Aguardamos a resposta e convertemos
+            const statusGetResponse = await getResponse.status;
             const data = await getResponse.json();
 
-            // capturamos o switch do formulario de edição
-            let checkboxTask = document.getElementById('checkCompletedTask');
-            // capturamos o checkbox escondido para guardar o estado em que a tarefa se encontra
-            let checkboxLastStatus = document.getElementById('checkboxFirstState');
-            // capturamos o input que receberá a descrição da tarefa
-            let inputUpdateTarefa = document.getElementById('inputUpdateTarefa');
+            if(statusGetResponse==200){
+                // capturamos o switch do formulario de edição
+                let checkboxTask = document.getElementById('checkCompletedTask');
+                // capturamos o checkbox escondido para guardar o estado em que a tarefa se encontra
+                let checkboxLastStatus = document.getElementById('checkboxFirstState');
+                // capturamos o input que receberá a descrição da tarefa
+                let inputUpdateTarefa = document.getElementById('inputUpdateTarefa');
 
-            // preenchemos os campos capturados com os valores retornado pela API
-            inputUpdateTarefa.value = data.description;
-            checkboxTask.checked = data.completed;
-            checkboxLastStatus.checked = data.completed;
+                // preenchemos os campos capturados com os valores retornado pela API
+                inputUpdateTarefa.value = data.description;
+                checkboxTask.checked = data.completed;
+                checkboxLastStatus.checked = data.completed;
+            }else if(data == 400){
+                modalUpdateControl.hide();
+                showModalMessage("Oops, tivemos um erro", "ID da tarefa inválido.", false);
+            }else if(data == 401){
+                modalUpdateControl.hide();
+                showModalMessage("Oops, tivemos um erro", "Houve um erro na autenticação, realize o login novamente por favor.", false)
+            }else if(data == 404){
+                modalUpdateControl.hide();
+                showModalMessage("Oops, tivemos um erro", "Tarefa inexistente, atualize a aplicação por favor.", false)
+            }else{
+                modalUpdateControl.hide();
+                showModalMessage("Oops, tivemos um erro", "Houve um erro no servidor, tente novamente realizar a tarefa", false)
+            }
+            
         } catch (err) {
             // caso haja algum erro durante o processamento, um alerta será exibido.
-            alert(`Oops! ${err}`);
+            showModalMessage('Erro na aplicação', err, false);
         }
     }
 
@@ -322,10 +415,11 @@
             // realizamos o chamado da api e aguardamos sua resposta
             const submitResponse = await updateTask(configuracaoFetch, dataUser, id);
             // aguardamos a resolução da promise e processamos a resposta
+            const statusSubmitResponse = await submitResponse.status
             const data = await submitResponse.json();
 
             // verificamos se o tipo retornado é um objeto, pois em caso de erro, temos o retorno de uma string
-            if (typeof (data) == 'object') {
+            if (statusSubmitResponse == 200) {
                 // capturamos os dados e elementos necessários para atualizar a interface
                 const completedTask = data.completed;
                 let statusLastState = lastState.checked;
@@ -339,20 +433,28 @@
                     lastState.checked = completedTask;
                     checkButton = document.getElementById(`btnCheck-${id}`)
                     if (completedTask) {
-                        listaFinalizada.appendChild(elementTask);
                         checkButton.classList.remove('bi-clipboard-check');
                         checkButton.classList.add('bi-arrow-90deg-left');
+                        descriptionTask.innerText = data.description;
+                        listaFinalizada.appendChild(elementTask);
                     } else {
-                        listaPendente.appendChild(elementTask);
                         checkButton.classList.add('bi-clipboard-check');
                         checkButton.classList.remove('bi-arrow-90deg-left');
+                        descriptionTask.innerText = data.description;
+                        listaPendente.appendChild(elementTask);
                     }
                 }
+            } else if(statusSubmitResponse == 400) {
+                showModalMessage("Oops, tivemos um erro", "ID da tarefa inválido.", false);
+            } else if(statusSubmitResponse == 404){
+                showModalMessage("Oops, tivemos um erro", "Tarefa inexistente, atualize a aplicação por favor.", false)
+            } else if(statusSubmitResponse == 401){
+                showModalMessage("Oops, tivemos um erro", "Houve um erro na autenticação, realize o login novamente por favor.", false)
             } else {
-                alert(data);
+                showModalMessage("Oops, tivemos um erro", "Houve um erro no servidor, tente novamente realizar a tarefa", false)
             }
         } catch (err) {
-            alert(`Oops! ${err}`);
+            showModalMessage("Erro na aplicação", err, false);
         }
     }
 
@@ -370,11 +472,18 @@
         submitCreateTask(BODY);
     });
     // função OK
-    modalUpdateTask.addEventListener('shown.bs.modal', (e) => {
-        console.log(e);
+    modalUpdateTask.addEventListener('show.bs.modal', () => {
         let id = modalUpdateTask.getAttribute('data-id');
         returnTaskToUpdate(configuracaoFetch, id);
     });
+
+    modalMesasage.addEventListener('hidden.bs.modal', ()=> {
+        let condition = modalMesasage.getAttribute('data-condition');
+
+        if(condition){
+            window.location.href="login.html";
+        }
+    })
 
     // função Ok
     formUpdate.addEventListener('submit', (e) => {

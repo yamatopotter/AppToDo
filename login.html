@@ -30,7 +30,7 @@
                             <a class="nav-link active" href="createAccount.html">Criar Conta</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="login.html">Login</a>
+                            <a class="nav-link" href="login.html" id="login">Login</a>
                         </li>
                     </ul>
                 </div>
@@ -49,12 +49,14 @@
                         <h1>Realize seu login</h1>
                         <form name="formLogin" id="formLogin" class="form-data">
                             <div class="form-floating">
-                                <input type="text" name="emailLogin" id="emailLogin" placeholder="E-mail" class="form-control">
+                                <input type="text" name="emailLogin" id="emailLogin" placeholder="E-mail"
+                                    class="form-control">
                                 <label for="emailLogin">E-mail</label>
                             </div>
-    
+
                             <div class="form-floating">
-                                <input type="password" name="senhaLogin" id="senhaLogin" placeholder="Senha" class="form-control">
+                                <input type="password" name="senhaLogin" id="senhaLogin" placeholder="Senha"
+                                    class="form-control">
                                 <label for="senhaLogin">Senha</label>
                             </div>
                             <button type="submit" class="button">Entrar</button>
@@ -66,12 +68,33 @@
             </div>
 
         </section>
+
+        <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalUpdateTaskLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalMessageTitle"></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <i class="bi" id="modalMessageIcon"></i>
+                        <p id="modalMessageBody"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
         Desenvolvido em conjunto pelo Grupo 1 - Matheus B., Rafael B., Edinaldo F. Bruno L.
     </footer>
 
+    <script src="./assets/js/bootstrap.min.js"></script>
     <script src="./assets/js/account.js"></script>
 </body>
 
