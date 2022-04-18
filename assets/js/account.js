@@ -7,24 +7,23 @@
     let modalMessage = document.getElementById('modalMessage');
     let modalMessageControl = new bootstrap.Modal(modalMessage);
 
-
     function showModalMessage(title, message, status, condition=false) {
-        const modalMesasageTitle = document.getElementById('modalMessageTitle');
-        const modalMesasageIcon = document.getElementById('modalMessageIcon');
-        const modalMesasageDescription = document.getElementById('modalMessageBody');
+        const modalMessageTitle = document.getElementById('modalMessageTitle');
+        const modalMessageIcon = document.getElementById('modalMessageIcon');
+        const modalMessageDescription = document.getElementById('modalMessageBody');
 
-        modalMesasageTitle.innerText = title;
-        modalMesasageDescription.innerText = message;
+        modalMessageTitle.innerText = title;
+        modalMessageDescription.innerText = message;
 
         if (status) {
-            modalMesasageIcon.classList.add('bi-info-circle');
-            modalMesasageIcon.classList.remove('bi-exclamation-circle');
+            modalMessageIcon.classList.add('bi-info-circle');
+            modalMessageIcon.classList.remove('bi-exclamation-circle');
         } else {
-            modalMesasageIcon.classList.add('bi-exclamation-circle');
-            modalMesasageIcon.classList.remove('bi-info-circle');
+            modalMessageIcon.classList.add('bi-exclamation-circle');
+            modalMessageIcon.classList.remove('bi-info-circle');
         }
 
-        if (condition){
+        if(condition){
             modalMessage.setAttribute('data-condition', true);
         }
         
@@ -45,6 +44,40 @@
             return false;
     }
 
+    function fetchUserData(configuracaoFetch) {
+        if(configuracaoFetch.body){
+            delete configuracaoFetch.body
+        }
+        configuracaoFetch.method='GET';
+        return fetch(`${BASE_URL_API}/users/getMe/`, configuracaoFetch)
+    }
+
+    async function showUserData(token){
+        const configuracaoFetch = {
+            headers: {
+                authorization: `${token}`,
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+            method: 'GET'
+        }
+
+        const serverResponse = await fetchUserData(configuracaoFetch);
+        const userData = await serverResponse.json();
+        const serverStatus = await serverResponse.status;
+
+        if (serverStatus==200){
+            let userName = userData.firstName + ' ' + userData.lastName;
+            let userEmail = userData.email;
+
+            document.getElementById("userName").innerText = userName;
+            document.getElementById("userEmail").innerText = userEmail;
+        }else if(serverStatus == 404){
+            showModalMessage('Oops, houve um erro', 'Usuário inexistente', false)
+        }else{
+            showModalMessage('Oops, houve um erro', 'Houve um erro ao carregar as informações do usuário, mas isso não impede o funcionamento do app', false)
+        }
+    }
+
     function fetchLogin(userData){
         const configuracoes = {
             method: 'POST',
@@ -55,6 +88,11 @@
         }
 
         return fetch(`${BASE_URL_API}/users/login`, configuracoes)
+    }
+
+    function deslogar(){
+        sessionStorage.clear();
+        showModalMessage("Logout", "Você será deslogado do sistema", true, true);
     }
 
     async function realizaLogin(userData){
@@ -120,6 +158,7 @@
                             console.log(resposta);
                             if(resposta==201){
                                 showModalMessage("Sucesso", "Seu cadastro foi realizado! Seja bem vindo ao ToDo App!", true);
+                                formCadastroUsuario.reset();
                             } else if (resposta == 400){
                                 showModalMessage("Oops, houve um erro", "O usuário já se encontra registrado ou alguns dados estão incompletos", false);
                             }
@@ -138,6 +177,15 @@ if (formLogin) {
     formLogin.addEventListener('submit', (evento) => {
         evento.preventDefault();
 
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.disabled = true;
+        
+        let newSpinner = document.createElement('span');
+        newSpinner.classList.add('spinner-border', 'text-success');
+        
+        loginBtn.innerText = "Carregando ... ";
+        loginBtn.appendChild(newSpinner);
+
         let userData = {
             email: evento.target['emailLogin'].value,
             password: evento.target['senhaLogin'].value
@@ -146,5 +194,42 @@ if (formLogin) {
         realizaLogin(userData);
     });
 }
+
+window.addEventListener('load', ()=>{
+   if(sessionStorage.getItem('token')!==null){
+       let loginMenuBtn = document.getElementById('loginMenuBtn');
+       loginMenuBtn.remove();
+
+       let logoutMenuBtn = document.createElement('a');
+       logoutMenuBtn.innerText = 'Logout';
+       logoutMenuBtn.classList.add('nav-link'); 
+       logoutMenuBtn.addEventListener('click', () => deslogar());
+
+       let mainMenu = document.getElementById('main-menu');
+
+       let appMenuBtn = document.createElement('li');
+       appMenuBtn.classList.add('nav-item');
+
+       let linkAppMenuBtn = document.createElement('a');
+       linkAppMenuBtn.classList.add('nav-link');
+       linkAppMenuBtn.href = "app.html"
+       linkAppMenuBtn.innerText = "Ver Tarefas"
+
+       appMenuBtn.appendChild(linkAppMenuBtn);
+       mainMenu.appendChild(logoutMenuBtn);
+       mainMenu.appendChild(appMenuBtn);
+
+       showUserData(sessionStorage.getItem('token'));
+   }
+});
+
+modalMessage.addEventListener('hidden.bs.modal', () => {
+    let condition = modalMessage.getAttribute('data-condition');
+
+    if(condition){
+        modalMessage.setAttribute('data-condition', false);
+        window.location.href="index.html";
+    }
+});
 
 })();

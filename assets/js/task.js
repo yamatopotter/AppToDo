@@ -40,7 +40,7 @@
     }
 
     // Cria os elementos
-    function createElement(id, description, status, condition) {
+    function createElement(id, description, status=false) {
         // Criação da LI
         let elementTask = document.createElement('li');
         elementTask.name = `task-${id}`;
@@ -134,6 +134,9 @@
 
             if (statusData == 200) {
                 // Através do MAP realizo a varredura do array de objetos retornado, passando elemento a elemento
+               
+                showUserData()
+                
                 data.map(dado => {
                     // capturo os dados do status da tarefa, descrição e id da tarefa retornado pela API
                     let statusTarefa = dado.completed;
@@ -175,27 +178,30 @@
         return fetch(`${BASE_URL_API}/tasks/${id}`, configuracaoFetch)
     }
 
-    function getUserData(configuracaoFetch) {
+    function fetchUserData(configuracaoFetch) {
+        if(configuracaoFetch.body){
+            delete configuracaoFetch.body
+        }
+        configuracaoFetch.method='GET';
         return fetch(`${BASE_URL_API}/users/getMe/`, configuracaoFetch)
-            .then(function (respostaDoServidor) {
-                return respostaDoServidor.json();
-            })
-            .then(function (resposta) {
-                if (resposta == "El usuario no existe") {
-                    return {
-                        error: "O usuário não existe"
-                    }
-                } else if (resposta == "Error del servidor") {
-                    return {
-                        error: "Erro do servidor"
-                    }
-                } else {
-                    return {
-                        error: false,
-                        result: resposta
-                    }
-                }
-            });
+    }
+
+    async function showUserData(){
+        const serverResponse = await fetchUserData(configuracaoFetch);
+        const userData = await serverResponse.json();
+        const serverStatus = await serverResponse.status;
+
+        if (serverStatus==200){
+            let userName = userData.firstName + ' ' + userData.lastName;
+            let userEmail = userData.email;
+
+            document.getElementById("userName").innerText = userName;
+            document.getElementById("userEmail").innerText = userEmail;
+        }else if(serverStatus == 404){
+            showModalMessage('Oops, houve um erro', 'Usuário inexistente', false)
+        }else{
+            showModalMessage('Oops, houve um erro', 'Houve um erro ao carregar as informações do usuário, mas isso não impede o funcionamento do app', false)
+        }
     }
 
     // realiza uma pesquisa completa nas tarefas do usuário
@@ -341,7 +347,12 @@
 
             // adicionamos a tarefa à lista
             listaPendente.appendChild(elementTask);
-        } catch (err) {
+
+            let newSpinner = document.getElementById('newTaskSpinner');
+            newSpinner.classList.toggle('d-none');
+            
+            formTarefa.reset();
+        } catch (err){
             // Exibe uma mensagem de erro caso aconteceça alguma coisa na tentativa de execução           
             showModalMessage('Erro na aplicação', err, false);
         }
@@ -463,6 +474,12 @@
     formTarefa.addEventListener('submit', (evento) => {
         evento.preventDefault();
 
+        let btnCreateTask = document.getElementById('createTaskBtn')
+        btnCreateTask.disabled = true;
+
+        let newSpinner = document.getElementById('newTaskSpinner');
+        newSpinner.classList.toggle('d-none');
+
         const TAREFA = evento.target['inputNovaTarefa'].value;
         const BODY = {
             description: TAREFA,
@@ -481,6 +498,7 @@
         let condition = modalMesasage.getAttribute('data-condition');
 
         if(condition){
+            modalMesasage.setAttribute('data-condition', false)
             window.location.href="login.html";
         }
     })

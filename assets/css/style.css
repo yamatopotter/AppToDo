@@ -55,6 +55,16 @@ section {
   padding: 80px 0;
 }
 
+button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+}
+
 .intro {
   padding-top: 140px;
   display: -webkit-box;
@@ -363,6 +373,16 @@ section {
 
 #modalMessage .bi-info-circle {
   color: #26a65b;
+}
+
+.user-data p {
+  margin: 0;
+  padding: 0;
+}
+
+.user-data i {
+  font-size: 2rem;
+  margin-right: 10px;
 }
 
 footer {

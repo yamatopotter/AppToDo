@@ -23,7 +23,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="index.html">Home</a>
+              <a class="nav-link" aria-current="page" href="index.html">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" aria-current="page" href="index.html#about">Sobre o App</a>
@@ -32,6 +32,14 @@
               <a class="nav-link" id="logout">Logout</a>
             </li>
           </ul>
+        </div>
+
+        <div class="d-flex flex-row user-data">
+          <i class="bi bi-person-circle"></i>
+          <div class="d-flex flex-column">
+            <p id="userName"></p>
+            <p id="userEmail"></p>
+          </div>    
         </div>
       </div>
     </nav>
@@ -50,7 +58,7 @@
                 <input type="text" name="inputNovaTarefa" id="inputNovaTarefa" class="form-control" placeholder="">
                 <label for="inputNovaTarefa">Hoje eu vou fazer ...</label>
               </div>
-              <button type="submit" class="button">Criar Tarefa</button>
+              <button type="submit" class="button" id="createTaskBtn" name="createTaskBtn">Criar Tarefa <span class="spinner-border text-success d-none" role="status" id="newTaskSpinner"></span></button>
             </form>
 
           </div>
