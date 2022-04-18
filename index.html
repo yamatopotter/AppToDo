@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,32 +10,40 @@
     <link rel="stylesheet" href="./assets/css/style.css">
     <title>ToDo App - Criar Cadastro</title>
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#"><img src="./assets/img/logo.svg" alt="Logo ToDo App"></a>
-              <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-              </button>
-              <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                  <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#top">Home</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" aria-current="page" href="#about">Sobre o App</a>
-                </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="createAccount.html">Criar Conta</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="login.html">Login</a>
-                  </li>          
-                </ul>
-              </div>
+                <a class="navbar-brand" href="#"><img src="./assets/img/logo.svg" alt="Logo ToDo App"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="main-menu">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#top">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="#about">Sobre o App</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login.html" id="loginMenuBtn">Login</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-flex flex-row user-data">
+                    <i class="bi bi-person-circle"></i>
+                    <div class="d-flex flex-column">
+                      <p id="userName"></p>
+                      <p id="userEmail"></p>
+                    </div>    
+                  </div>
             </div>
-          </nav>
+        </nav>
     </header>
     <span id="top"></span>
     <main>
@@ -42,7 +51,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12 col-lg-6 texto-intro">
-    
+
                         <img src="./assets/img/logo.svg" alt="Logo ToDo App" class="logo">
                         <h1>Seja bem vindo ao ToDo App</h1>
                         <p><b>É um muito fácil criar uma conta em nosso aplicativo</b></p>
@@ -53,7 +62,7 @@
                             <li>Aproveite nosso App!</li>
                         </ol>
                     </div>
-        
+
                     <div class="col-12 col-lg-6 form-intro" id="createAccount">
                         <h2>Crie sua conta</h2>
                         <form name="formCreateAccount" id="formCreateAccount" class="form-data">
@@ -63,7 +72,8 @@
                             </div>
 
                             <div class="form-floating">
-                                <input type="text" name="sobrenome" id="sobrenome" class="form-control" placeholder="Sobrenome">
+                                <input type="text" name="sobrenome" id="sobrenome" class="form-control"
+                                    placeholder="Sobrenome">
                                 <label for="sobrenome">Sobrenome</label>
                             </div>
 
@@ -71,14 +81,15 @@
                                 <input type="email" name="email" id="email" class="form-control" placeholder="E-mail">
                                 <label for="email">E-mail</label>
                             </div>
-                           
+
                             <div class="form-floating">
                                 <input type="password" name="senha" id="senha" class="form-control" placeholder="Senha">
                                 <label for="senha">Senha</label>
                             </div>
 
                             <div class="form-floating">
-                                <input type="password" name="confirmaSenha" id="confirmaSenha" class="form-control" placeholder="Confirme sua Senha">
+                                <input type="password" name="confirmaSenha" id="confirmaSenha" class="form-control"
+                                    placeholder="Confirme sua Senha">
                                 <label for="confirmaSenha">Confirme sua senha</label>
                             </div>
                             <button type="submit" class="button">Criar Conta</button>
@@ -89,7 +100,7 @@
             </div>
 
         </section>
-    
+
         <section class="about" id="about">
             <div class="container">
                 <div class="row">
@@ -100,8 +111,12 @@
 
                     <div class="col-12 col-lg-6 d-flex flex-column justify-content-center">
                         <h1 class="mb-4">Para que serve?</h1>
-            
-                        <p>Quantas vezes ao longo da semana você estava ciente de um compromisso, um trabalho, reunião e até mesmo aquele date e esqueceu porque estava focado em outra coisa ou porque é cabeça de vento? O ToDo App foi desenvolvido especialmente para que essas coisas não caiam no esquecimento, com uma interface simples e intuitiva, conseguimos te ajudar a organizar suas tarefas do dia a dia.</p>
+
+                        <p>Quantas vezes ao longo da semana você estava ciente de um compromisso, um trabalho, reunião e
+                            até mesmo aquele date e esqueceu porque estava focado em outra coisa ou porque é cabeça de
+                            vento? O ToDo App foi desenvolvido especialmente para que essas coisas não caiam no
+                            esquecimento, com uma interface simples e intuitiva, conseguimos te ajudar a organizar suas
+                            tarefas do dia a dia.</p>
 
                         <p>Ainda não tem uma conta? Está esperando o que então para deixar de esquecer suas tarefas?</p>
 
@@ -111,12 +126,37 @@
                 </div>
             </div>
         </section>
-        
-        <footer>
-            Desenvolvido em conjunto pelo Grupo 1 - Matheus B., Rafael B., Edinaldo F. Bruno L.
-        </footer>
+
+        <!-- Modal de mensagem -->
+
+        <div class="modal fade" id="modalMessage" tabindex="-1" aria-labelledby="modalUpdateTaskLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="modalMessageTitle"></h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <i class="bi" id="modalMessageIcon"></i>
+                  <p id="modalMessageBody"></p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                  <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+
     </main>
 
+    <footer>
+        Desenvolvido em conjunto pelo Grupo 1 - Matheus B., Rafael B., Edinaldo F. Bruno L.
+    </footer>
+
+    <script src="./assets/js/bootstrap.min.js"></script>
     <script src="./assets/js/account.js"></script>
 </body>
+
 </html>
