@@ -195,6 +195,7 @@
             let userName = userData.firstName + ' ' + userData.lastName;
             let userEmail = userData.email;
 
+            document.getElementById('iconUser').classList.toggle('d-none');
             document.getElementById("userName").innerText = userName;
             document.getElementById("userEmail").innerText = userEmail;
         }else if(serverStatus == 404){
@@ -350,7 +351,7 @@
 
             let newSpinner = document.getElementById('newTaskSpinner');
             newSpinner.classList.toggle('d-none');
-            
+
             formTarefa.reset();
         } catch (err){
             // Exibe uma mensagem de erro caso aconteceça alguma coisa na tentativa de execução           
