@@ -357,6 +357,10 @@
             // Exibe uma mensagem de erro caso aconteceça alguma coisa na tentativa de execução           
             showModalMessage('Erro na aplicação', err, false);
         }
+
+        let newSpinner = document.getElementById('newTaskSpinner');
+        newSpinner.classList.toggle('d-none');
+        btnCreateTask.disabled = false;
     }
 
     // -----------------UPDATE----------------------

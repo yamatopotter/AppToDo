@@ -122,6 +122,10 @@
         else{
             showModalMessage("Oops, houve um erro", "Algum campo está vazio, verifique e tente o login novamente.", false);
         }
+
+        const loginBtn = document.getElementById('loginBtn');
+        loginBtn.innerText = "Entrar";
+        loginBtn.disabled = false;
     }
 
     // Se o formulário de cadastro existir
